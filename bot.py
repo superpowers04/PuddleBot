@@ -3,12 +3,17 @@ from discord.ext import commands
 import json
 import cfg
 
+intents = discord.Intents.default()
+intents.message_content=True
+
+
 bot = commands.Bot(
 	command_prefix=cfg.bot['prefix'],
 	description=cfg.bot['description'],
 	owner_id=cfg.bot['owner'],
 	activity=discord.Game(name=cfg.bot['game'], type=0),
-	case_insensitive=True
+	case_insensitive=True,
+	intents=intents
 )
 
 @bot.event
@@ -16,7 +21,6 @@ async def on_ready():
 	print('Logged in as')
 	print(bot.user.name)
 	print(bot.user.id)
-	print("Has nitro: " + str(bot.user.premium))
 	print("prefix: {}".format(cfg.bot['prefix']))
 	print('------')
 
@@ -36,4 +40,4 @@ if __name__ == "__main__":
 		cogName = 'cogs.{}'.format(cog)
 		print('loading: {}'.format(cogName))
 		bot.load_extension(cogName)
-	bot.run(cfg.bot['token'], bot=True, reconnect=True)
+	bot.run(cfg.bot['token'], reconnect=True)
