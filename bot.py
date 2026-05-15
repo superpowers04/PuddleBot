@@ -18,11 +18,7 @@ bot = commands.Bot(
 
 @bot.event
 async def on_ready():
-	print('Logged in as')
-	print(bot.user.name)
-	print(bot.user.id)
-	print("prefix: {}".format(cfg.bot['prefix']))
-	print('------')
+	print(f'Logged in as {bot.user.name}({bot.user.id}) with prefix {cfg.bot['prefix']}\n-----')
 
 @bot.event
 async def on_message(message):
