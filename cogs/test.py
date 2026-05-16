@@ -20,5 +20,5 @@ class Test(commands.Cog):
 		em = discord.Embed(title="No way", description='I disagree', colour=cfg.colors['red'])
 		return await ctx.send(embed=em)
 
-def setup(bot):
-	bot.add_cog(Test(bot))
+async def setup(bot):
+	await bot.add_cog(Test(bot))

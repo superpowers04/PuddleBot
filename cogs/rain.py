@@ -201,5 +201,5 @@ class Rain(commands.Cog):
 		self.makeIndexs()
 		return await ctx.send(resp)
 
-def setup(bot):
-	bot.add_cog(Rain(bot))
+async def setup(bot):
+	await bot.add_cog(Rain(bot))

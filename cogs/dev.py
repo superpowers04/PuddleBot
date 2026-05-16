@@ -44,5 +44,5 @@ class Dev:
 		await ctx.send(convert)
 		return await ctx.message.delete()
 
-def setup(bot):
+async def setup(bot):
 	bot.add_cog(Dev(bot))

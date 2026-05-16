@@ -66,5 +66,5 @@ class Search(commands.Cog):
 			return await ctx.send('**Result:**\n'+'\n\n'.join(plaintext))
 		return await ctx.send('I\'m sorry {}. I\'m afraid I can\'t do that :confused:\nSomething went wrong'.format(ctx.author.display_name),delete_after=5)
 
-def setup(bot):
-	bot.add_cog(Search(bot))
+async def setup(bot):
+	await bot.add_cog(Search(bot))

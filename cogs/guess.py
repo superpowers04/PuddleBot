@@ -150,5 +150,5 @@ class Guess(commands.Cog):
 				text = text + '\nUnkown user:\t{}'.format(value)
 		return await ctx.send(text)
 
-def setup(bot):
-	bot.add_cog(Guess(bot))
+async def setup(bot):
+	await bot.add_cog(Guess(bot))

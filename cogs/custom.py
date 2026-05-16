@@ -238,5 +238,5 @@ class Custom(commands.Cog):
 			await m.delete()
 		return await ctx.send('cleared {} messages'.format(num))
 
-def setup(bot):
-	bot.add_cog(Custom(bot))
+async def setup(bot):
+	await bot.add_cog(Custom(bot))

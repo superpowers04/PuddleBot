@@ -267,5 +267,5 @@ class Fun(commands.Cog):
 			return await ctx.send('I\'m not sure what on earth you\'ve done here, but the rolls post is to long to print. <:facepalmy:263144001777958913>')
 		return await ctx.send(response)
 
-def setup(bot):
-	bot.add_cog(Fun(bot))
+async def setup(bot):
+	await bot.add_cog(Fun(bot))

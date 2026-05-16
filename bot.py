@@ -31,9 +31,23 @@ async def on_message(message):
 		message.author.discriminator = -1
 	return await bot.process_commands(message)
 
-if __name__ == "__main__":
+@bot.event
+async def on_command_error(ctx,err):
+	if ('Command ' in str(err)) and (' is not found' in str(err)):
+		return await ctx.message.add_reaction('❓')
+	print(f'[ERROR] {err}')
+	return await ctx.message.add_reaction('❗')
+
+@bot.event
+async def setup_hook():
+
 	for cog in cfg.cogs:
-		cogName = 'cogs.{}'.format(cog)
-		print('loading: {}'.format(cogName))
-		bot.load_extension(cogName)
-	bot.run(cfg.bot['token'], reconnect=True)
+		cogName = f'cogs.{cog}'
+		print(f'loading: {cogName}')
+		await bot.load_extension(cogName)
+	
+
+
+
+
+if __name__ == "__main__": bot.run(cfg.bot['token'], reconnect=True)
