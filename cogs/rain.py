@@ -59,8 +59,8 @@ class Rain(commands.Cog):
 	async def rain(self, ctx):
 		"""A group of commands to lookup updates from the rain comic."""
 		if ctx.invoked_subcommand is None:
-			return await ctx.send('Missing Argument: use `cf (number)` `da (code)` or `latest`\nAlternatively use {comand prefix}help rain for a more indepth help',delete_after=10)
-			
+			return await ctx.send(f'Missing Subcommand! Use `{cfg.bot.prefix}help rain` to list all sub-commands!',delete_after=10)
+
 	@rain.command()
 	async def cf(self, ctx, *, page):
 		"""
@@ -71,14 +71,12 @@ class Rain(commands.Cog):
 		This will only work for pages in the bots page list
 		you can use the latest command to check if the list is up to date
 		"""
-		page = int(page)
-		if page in self.dex['CF']:
-			output = self.genPage(self.dex['CF'][page])
-			em = discord.Embed(title=self.ref[self.dex['CF'][page]]['Page Title'], description=output, colour=cfg.colors['green'])
+		if page := self.dex['CF'][int(page)]:
+			output = self.genPage(page)
+			em = discord.Embed(title=self.ref[page]['Page Title'], description=output, colour=cfg.colors['green'])
 			return await ctx.send(embed=em)
-		else:
-			em = discord.Embed(title="Error", description="Unable to find an update with that number", colour=cfg.colors['red'])
-			return await ctx.send(embed=em,delete_after=5)
+		em = discord.Embed(title="Error", description="Unable to find an update with that number", colour=cfg.colors['red'])
+		return await ctx.send(embed=em,delete_after=5)
 
 	@rain.command()
 	async def da(self, ctx, *, page):
@@ -136,10 +134,7 @@ class Rain(commands.Cog):
 				i+=2
 				continue
 			if Query[i]=='"':
-				if inQuotes:
-					inQuotes=False
-				else:
-					inQuotes=True
+				inQuotes=not inQuotes
 			if Query[i]==' ' and not inQuotes:
 				#this is both an end of term and a start(if )
 				if startI<i:
@@ -148,6 +143,7 @@ class Rain(commands.Cog):
 			i+=1
 		if startI<i:
 			terms.append(Query[startI:i])
+
 		Cquery = set()
 		Tquery = []
 		for term in terms:
@@ -159,9 +155,7 @@ class Rain(commands.Cog):
 		results = []
 		for j, page in enumerate(self.ref):
 			if Cquery:#char search first as its fast
-				if 'chars' not in page:
-					continue
-				if not Cquery.issubset(page['chars']):
+				if ('chars' not in page) or (not Cquery.issubset(page['chars'])):
 					continue
 			good=True
 			if Tquery:#word search
@@ -174,15 +168,21 @@ class Rain(commands.Cog):
 			if good:
 				results.append(j)
 		output=[]
-		if len(results) > 10:
-			output.append('Too many pages to list, showing first 10')
-			for j in range(10):
-				output.append(' http://rain.thecomicseries.com/comics/{}'.format(self.ref[results[j]]['CF page']))
-		else:
-			for result in results:
-				output.append(' http://rain.thecomicseries.com/comics/{}'.format(self.ref[result]['CF page']))
+		char_count = 0
+		i=0
+		for result in results:
+			ref = self.ref[result]
+			name = ref['Page Title']
+			if not name :name = f'Page {ref['CF page']}'
+			formatted_text = f'[{name}](http://rain.thecomicseries.com/comics/{ref['CF page']})'
+			char_count+=len(formatted_text)
+			if(char_count>1600):
+				output.append(f'{len(results)-i} more...')
+				break
+			i+=1
+			output.append(formatted_text)
 		stopTime = time.perf_counter()
-		em = discord.Embed(title='found {} results, in {}ms'.format(len(results),int((stopTime-startTime)*1000)), description='\n'.join(output), colour=cfg.colors['green'])
+		em = discord.Embed(title=f'Found {len(results)} results, in {int((stopTime-startTime)*1000)}ms', description=', '.join(output), colour=cfg.colors['green'])
 		return await ctx.send(embed=em)
 
 	@rain.command()
