@@ -9,7 +9,7 @@ import re
 import time
 
 makeNull = re.compile('[,.?!"\';:&]|<b>|</b>|<i>|</i>')
-nameNull = re.compile('[,.?!"\';:&]|\(.*\)')
+nameNull = re.compile('[,.?!"\';:&]|\\(.*\\)')
 makeSpace = {'\n','  ','  '}## th replacing double space with space, twice is to remove multi spaces where there was a situation of [space][punctuation][space]
 
 def stipPunc(t):

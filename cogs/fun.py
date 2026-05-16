@@ -167,7 +167,7 @@ class Fun(commands.Cog):
 
 		# voodoo magic regex (matches A,dB,AdB,AdBrC and AdBh/lD all at once, and splits them up to be processed)
 
-		m = re.findall('(-?)((?:(\d*)d(\d+))|\d+)(r\d+)?([h,l]{1}\d+)?', parts[0])
+		m = re.findall('(-?)((?:(\\d*)d(\\d+))|\\d+)(r\\d+)?([h,l]{1}\\d+)?', parts[0])
 
 		if not m:  # either no arguments, or the expression contained nothing that could be seen as a number or roll
 			return await ctx.send("Expression missing. If you are unsure of what the format should be, please use `{}help roll`".format(ctx.prefix),delete_after=15)
