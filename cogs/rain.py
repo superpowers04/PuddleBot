@@ -154,8 +154,9 @@ class Rain(commands.Cog):
 		print(Cquery,Tquery)
 		results = []
 		for j, page in enumerate(self.ref):
-			if Cquery:#char search first as its fast
-				if ('chars' not in page) or (not Cquery.issubset(page['chars'])):
+			#char search first as its fast
+			if Cquery:
+				if not ('chars' in page and Cquery.issubset(page['chars'])):
 					continue
 			good=True
 			if Tquery:#word search
@@ -169,20 +170,22 @@ class Rain(commands.Cog):
 				results.append(j)
 		output=[]
 		char_count = 0
-		i=0
-		for result in results:
+		for i, result in enumerate(results):
 			ref = self.ref[result]
 			name = ref['Page Title']
-			if not name :name = f'Page {ref['CF page']}'
+			if not name: name = f'Page {ref['CF page']}'
 			formatted_text = f'[{name}](http://rain.thecomicseries.com/comics/{ref['CF page']})'
 			char_count+=len(formatted_text)
 			if(char_count>1600):
 				output.append(f'{len(results)-i} more...')
 				break
-			i+=1
 			output.append(formatted_text)
 		stopTime = time.perf_counter()
-		em = discord.Embed(title=f'Found {len(results)} results, in {int((stopTime-startTime)*1000)}ms', description=', '.join(output), colour=cfg.colors['green'])
+		em = discord.Embed(
+			title=f'Found {len(results)} results in {int((stopTime-startTime)*1000)}ms', 
+			description=', '.join(output),
+			colour=cfg.colors['green']
+		)
 		return await ctx.send(embed=em)
 
 	@rain.command()
